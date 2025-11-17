@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>法语词汇消消乐（胜利动画版）</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:-apple-system,Segoe UI,Roboto,sans-serif;
+  background:linear-gradient(135deg,#d6e7ff,#f3f7ff);
+  padding:20px;
+}
+.hidden{display:none!important;}
+.app-container{max-width:900px;margin:auto;text-align:center;margin-top:60px;}
+
+/* ===== 搜索框样式 ===== */
+#search-box{
+  width:70%;max-width:480px;padding:14px 20px;font-size:18px;
+  border-radius:50px;border:1px solid #ddd;outline:none;
+  box-shadow:0 3px 12px rgba(0,0,0,.08);transition:.2s;
+}
+#search-box:focus{box-shadow:0 4px 16px rgba(0,0,0,.12);}
+#search-btn{
+  margin-top:20px;padding:10px 26px;border:none;border-radius:30px;
+  background:#4d77ff;color:white;font-size:17px;cursor:pointer;
+  box-shadow:0 4px 10px rgba(77,119,255,.4);transition:.2s;
+}
+#search-btn:hover{filter:brightness(1.05);}
+
+/* ===== 游戏说明卡片 ===== */
+#game-instructions {
+  margin: 30px auto 0;
+  max-width: 650px;
+  background: rgba(255,255,255,0.85);
+  padding: 20px 26px;
+  border-radius: 16px;
+  text-align: left;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  font-size: 15px;
+  line-height: 1.6;
+  color:#333;
+}
+#game-instructions h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color:#2a4a8a;
+}
+
+/* ===== 游戏界面 ===== */
+#game-screen{
+  background:#fff;padding:22px;border-radius:18px;
+  box-shadow:0 6px 20px rgba(0,0,0,.08);
+  margin-top:40px;text-align:left;
+}
+.top-bar{display:flex;justify-content:space-between;margin-bottom:12px;font-size:15px;}
+.stats{display:flex;gap:20px;}
+
+#game-board{
+  margin-top:15px;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:14px;
+}
+.card{
+  padding:15px 12px;border-radius:999px;cursor:pointer;font-size:15px;
+  font-weight:500;user-select:none;transition:.18s;box-shadow:0 4px 10px rgba(0,0,0,.12);
+  border:2px solid transparent;text-align:center;
+}
+.fr{background:#e8f0ff;border-color:#5f8eff;color:#1548d1;}
+.zh{background:#ffeaea;border-color:#ff6b6b;color:#c62828;}
+
+.card:active{
+  transform:scale(.93);
+  box-shadow:0 2px 5px rgba(0,0,0,.08);
+}
+
+.selected{
+  transform:scale(1.05);
+  box-shadow:0 6px 16px rgba(0,0,0,.2);
+}
+
+.matched{
+  opacity:0;transform:scale(.5);pointer-events:none;transition:.4s;
+}
+
+/* ========= 胜利动画：彩带 + 星光 ========== */
+#victory-bg {
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:200;
+}
+.confetti {
+  position:absolute;
+  width:8px;
+  height:14px;
+  background:var(--c);
+  animation:fall linear forwards;
+  opacity:.9;
+}
+@keyframes fall {
+  to {
+    transform:translateY(100vh) rotate(360deg);
+    opacity:0.6;
+  }
+}
+
+.star {
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:white;
+  border-radius:50%;
+  animation:twinkle 1.5s infinite ease-in-out;
+}
+@keyframes twinkle {
+  0%{opacity:0;}
+  50%{opacity:1;}
+  100%{opacity:0;}
+}
+
+/* 胜利弹窗 */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.35);
+  display:flex;justify-content:center;align-items:center;z-index:300;
+}
+.result-card{
+  background:white;padding:30px;width:320px;border-radius:16px;
+  text-align:center;box-shadow:0 10px 24px rgba(0,0,0,.26);
+  animation:pop .25s ease-out;
+}
+@keyframes pop{
+  from{transform:scale(.8);opacity:.5;}
+  to{transform:scale(1);opacity:1;}
+}
+</style>
+</head>
+
+<body>
+<div class="app-container">
+
+<!-- ===== 整个开始界面容器（游戏开始后将隐藏） ===== -->
+<div id="start-screen-container">
+
+  <h1 style="font-size:40px;margin-bottom:20px;">法语词汇消消乐</h1>
+
+  <input id="search-box" type="text" placeholder="请输入你的名字…">
+  <button id="search-btn">开始学习 ▶</button>
+
+  <div id="game-instructions">
+    <h3>📘 游戏玩法说明</h3>
+    <p>1. 输入姓名并点击「开始学习」进入游戏。</p>
+    <p>2. 点击蓝色的 <strong>法语泡泡</strong> 可以听发音。</p>
+    <p>3. 再点击对应的红色 <strong>中文泡泡</strong> 进行配对。</p>
+    <p>4. 若配对正确，两张泡泡会消失；若错误则恢复并 +1 错误次数。</p>
+    <p>5. 全部词汇配对完成后，将显示成绩、总用时与错误次数。</p>
+  </div>
+
+</div>
+
+<!-- ================= 游戏界面 ================= -->
+<section id="game-screen" class="hidden">
+  <div class="top-bar">
+    <div>👤 学生：<span id="display-name">—</span></div>
+    <div class="stats">
+      <div>⏱ 时间：<span id="time-display">00:00</span></div>
+      <div>❌ 错误：<span id="error-count">0</span></div>
+    </div>
+  </div>
+  <div id="game-board"></div>
+</section>
+
+<div id="victory-bg" class="hidden"></div>
+
+<div id="result-overlay" class="overlay hidden">
+  <div class="result-card">
+    <div style="font-size:40px;">🏆</div>
+    <h2>恭喜完成全部配对！</h2>
+    <p>姓名：<span id="result-name"></span></p>
+    <p>用时：<span id="result-time"></span></p>
+    <p>错误：<span id="result-errors"></span></p>
+    <button id="play-again-btn"
+      style="margin-top:18px;padding:10px 20px;background:#5f8eff;color:white;border:none;border-radius:10px;cursor:pointer;">
+      再玩一次 🔁
+    </button>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+const vocabPairs=[    { fr: 'servir à qn', zh: '对某人有用' },    { fr: 'serrer qn contre son cœur', zh: '将某人紧紧抱在怀里' },    { fr: 'avec calme', zh: '平静地；冷静地' },    { fr: 'timide', zh: '羞怯的；腼腆的' },    { fr: 'dur', zh: '硬的；艰难的' },    { fr: 's’abriter', zh: '躲避；避难' },    { fr: 'optimiste', zh: '乐观的' },    { fr: 'pessimiste', zh: '悲观的' },    { fr: 'en bons termes', zh: '关系融洽' },    { fr: 'réservé(e)', zh: '内向的；矜持的' },    { fr: 'bavard(e)', zh: '爱说话的；唠叨的' },    { fr: 'arrogant(e)', zh: '傲慢的；自大的' },    { fr: 'temporaire', zh: '临时的；暂时的' },    { fr: 'hésitant(e)', zh: '犹豫的' },    { fr: 'doux(ce)', zh: '柔软的；温和的；甜的' },    { fr: 'tendre', zh: '嫩的；柔软的；温柔的' },    { fr: 'se décourager', zh: '灰心；泄气' },    { fr: 's’exposer', zh: '暴露自己；冒险' },    { fr: 'confiant(e)', zh: '自信的；信任的' },    { fr: 'rater le projet', zh: '项目失败；把项目搞砸' },    { fr: 'mener qch à bien', zh: '把某事顺利完成' },    { fr: 'en conflit', zh: '处于冲突中' },    { fr: 'en paix', zh: '和平相处；安宁地' },];
+
+const searchBtn=document.getElementById("search-btn");
+const searchBox=document.getElementById("search-box");
+const gameScreen=document.getElementById("game-screen");
+const startContainer=document.getElementById("start-screen-container");
+const displayName=document.getElementById("display-name");
+const gameBoard=document.getElementById("game-board");
+const timeDisplay=document.getElementById("time-display");
+const errorDisplay=document.getElementById("error-count");
+const resultOverlay=document.getElementById("result-overlay");
+const resultName=document.getElementById("result-name");
+const resultTime=document.getElementById("result-time");
+const resultErrors=document.getElementById("result-errors");
+const playAgainBtn=document.getElementById("play-again-btn");
+const victoryBG=document.getElementById("victory-bg");
+
+let first=null,lock=false,errors=0,matched=0,seconds=0,timer=null;
+
+function speakFR(text){
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="fr-FR";
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+function startTimer(){
+  seconds=0;
+  timeDisplay.textContent="00:00";
+  timer=setInterval(()=>{
+    seconds++;
+    let mm=String(Math.floor(seconds/60)).padStart(2,"0");
+    let ss=String(seconds%60).padStart(2,"0");
+    timeDisplay.textContent=`${mm}:${ss}`;
+  },1000);
+}
+
+function buildGame(){
+  first=null;lock=false;errors=0;matched=0;
+  errorDisplay.textContent=0;
+  gameBoard.innerHTML="";
+
+  let cards=[];
+  vocabPairs.forEach((v,i)=>{
+    cards.push({id:i,text:v.fr,lang:"fr"});
+    cards.push({id:i,text:v.zh,lang:"zh"});
+  });
+
+  cards.sort(()=>Math.random()-.5);
+
+  cards.forEach(c=>{
+    const el=document.createElement("div");
+    el.className=`card ${c.lang}`;
+    el.textContent=c.text;
+    el.dataset.id=c.id;
+    el.dataset.lang=c.lang;
+    el.onclick=()=>selectCard(el);
+    gameBoard.appendChild(el);
+  });
+
+  startTimer();
+}
+
+function selectCard(card){
+  if(lock || card.classList.contains("matched")) return;
+
+  if(card.dataset.lang==="fr") speakFR(card.textContent);
+
+  card.classList.add("selected");
+
+  if(!first){ first=card; return; }
+
+  let match= first.dataset.id===card.dataset.id && first.dataset.lang!==card.dataset.lang;
+
+  if(match){
+    card.classList.add("matched");
+    first.classList.add("matched");
+    matched+=2;
+    first=null;
+
+    if(matched===vocabPairs.length*2){
+      finishGame();
+    }
+  }else{
+    lock=true;
+    errors++; errorDisplay.textContent=errors;
+    setTimeout(()=>{
+      first.classList.remove("selected");
+      card.classList.remove("selected");
+      first=null; lock=false;
+    },700);
+  }
+}
+
+function launchVictoryAnimation(){
+  victoryBG.innerHTML="";
+  victoryBG.classList.remove("hidden");
+
+  for(let i=0;i<80;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.top="-20px";
+    c.style.setProperty("--c",`hsl(${Math.random()*360},80%,60%)`);
+    c.style.animationDuration=1.5+Math.random()*1.4+"s";
+    victoryBG.appendChild(c);
+  }
+
+  for(let i=0;i<40;i++){
+    const s=document.createElement("div");
+    s.className="star";
+    s.style.left=Math.random()*100+"vw";
+    s.style.top=Math.random()*100+"vh";
+    s.style.animationDelay=Math.random()*2+"s";
+    victoryBG.appendChild(s);
+  }
+}
+
+function finishGame(){
+  clearInterval(timer);
+  launchVictoryAnimation();
+  resultName.textContent=displayName.textContent;
+  resultTime.textContent=timeDisplay.textContent;
+  resultErrors.textContent=errors;
+  resultOverlay.classList.remove("hidden");
+}
+
+searchBtn.onclick=()=>{
+  let name=searchBox.value.trim();
+  if(!name){ alert("请输入姓名！"); return; }
+
+  displayName.textContent=name;
+
+  /* 🔥 游戏开始后隐藏整个开始界面 */
+  startContainer.classList.add("hidden");
+
+  gameScreen.classList.remove("hidden");
+  buildGame();
+};
+
+playAgainBtn.onclick=()=>{
+  victoryBG.classList.add("hidden");
+  resultOverlay.classList.add("hidden");
+  buildGame();
+};
+
+});
+</script>
+
+</body>
+</html>
