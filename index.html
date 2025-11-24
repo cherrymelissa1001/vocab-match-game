@@ -1,8 +1,8 @@
-"<!DOCTYPE html>
-<html lang=""zh"">
+<!DOCTYPE html>
+<html lang="zh">
 <head>
-<meta charset=""UTF-8"">
-<meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A2 法语词汇消消乐</title>
 
 <style>
@@ -194,17 +194,17 @@ body {
 
 <body>
 
-<div class=""container"">
+<div class="container">
 
 <!-- ======================
      🔵 开始界面
      ====================== -->
-<div id=""start-screen"">
+<div id="start-screen">
     <h1>👋 A2 法语词汇消消乐</h1>
 
-    <div class=""search-box"">
-        <input id=""player-name"" type=""text"" placeholder=""请输入姓名…"">
-        <button class=""search-btn"" id=""start-btn"">开始 ▶</button>
+    <div class="search-box">
+        <input id="player-name" type="text" placeholder="请输入姓名…">
+        <button class="search-btn" id="start-btn">开始 ▶</button>
     </div>
 
     <ul>
@@ -218,31 +218,31 @@ body {
 <!-- ======================
      🟦 游戏界面
      ====================== -->
-<div id=""game-screen"" class=""hidden"">
+<div id="game-screen" class="hidden">
 
-    <div class=""top-bar"">
-        <div>👤 学生：<span id=""display-name"">—</span></div>
-        <div>⏱ 时间：<span id=""time-display"">00:00</span></div>
-        <div>❌ 错误：<span id=""error-count"">0</span></div>
+    <div class="top-bar">
+        <div>👤 学生：<span id="display-name">—</span></div>
+        <div>⏱ 时间：<span id="time-display">00:00</span></div>
+        <div>❌ 错误：<span id="error-count">0</span></div>
     </div>
 
-    <div id=""game-board""></div>
+    <div id="game-board"></div>
 </div>
 
 <!-- ======================
      🎉 结束界面
      ====================== -->
-<div id=""result-overlay"" class=""hidden"">
-    <div class=""result-card"">
+<div id="result-overlay" class="hidden">
+    <div class="result-card">
         <h2>🎉 恭喜完成！</h2>
-        <p>姓名：<span id=""result-name""></span></p>
-        <p>用时：<span id=""result-time""></span></p>
-        <p>错误：<span id=""result-errors""></span></p>
-        <button class=""search-btn"" id=""play-again-btn"">再玩一次 🔁</button>
+        <p>姓名：<span id="result-name"></span></p>
+        <p>用时：<span id="result-time"></span></p>
+        <p>错误：<span id="result-errors"></span></p>
+        <button class="search-btn" id="play-again-btn">再玩一次 🔁</button>
     </div>
 </div>
 
-<div class=""fireworks"" id=""fireworks""></div>
+<div class="fireworks" id="fireworks"></div>
 
 </div> <!-- container end -->
 
@@ -259,20 +259,20 @@ let frenchVoice = null;
 
 function loadVoices() {
     let voices = speechSynthesis.getVoices();
-    frenchVoice = voices.find(v => v.lang.startsWith(""fr""));
+    frenchVoice = voices.find(v => v.lang.startsWith("fr"));
 }
 
-if (""speechSynthesis"" in window) {
+if ("speechSynthesis" in window) {
     speechSynthesis.onvoiceschanged = loadVoices;
     loadVoices();
 }
 
 function speakFR(text) {
-    if (!(""speechSynthesis"" in window)) return;
+    if (!("speechSynthesis" in window)) return;
     if (!frenchVoice) return;  // 手机端静音
 
     let u = new SpeechSynthesisUtterance(text);
-    u.lang = ""fr-FR"";
+    u.lang = "fr-FR";
     u.voice = frenchVoice;
     speechSynthesis.speak(u);
 }
@@ -280,22 +280,22 @@ function speakFR(text) {
 /* =======================
    游戏
    ======================= */
-const startBtn = document.querySelector(""#start-btn"");
-const playerInput = document.querySelector(""#player-name"");
-const startScreen = document.querySelector(""#start-screen"");
-const gameScreen = document.querySelector(""#game-screen"");
-const gameBoard = document.querySelector(""#game-board"");
+const startBtn = document.querySelector("#start-btn");
+const playerInput = document.querySelector("#player-name");
+const startScreen = document.querySelector("#start-screen");
+const gameScreen = document.querySelector("#game-screen");
+const gameBoard = document.querySelector("#game-board");
 
-const displayName = document.querySelector(""#display-name"");
-const timerDisplay = document.querySelector(""#time-display"");
-const errorDisplay = document.querySelector(""#error-count"");
+const displayName = document.querySelector("#display-name");
+const timerDisplay = document.querySelector("#time-display");
+const errorDisplay = document.querySelector("#error-count");
 
-const resultOverlay = document.querySelector(""#result-overlay"");
-const fireworks = document.querySelector(""#fireworks"");
-const resultName = document.querySelector(""#result-name"");
-const resultTime = document.querySelector(""#result-time"");
-const resultErrors = document.querySelector(""#result-errors"");
-const playAgainBtn = document.querySelector(""#play-again-btn"");
+const resultOverlay = document.querySelector("#result-overlay");
+const fireworks = document.querySelector("#fireworks");
+const resultName = document.querySelector("#result-name");
+const resultTime = document.querySelector("#result-time");
+const resultErrors = document.querySelector("#result-errors");
+const playAgainBtn = document.querySelector("#play-again-btn");
 
 let first = null, lock=false, matched=0, errors=0, seconds=0, timer;
 
@@ -303,8 +303,8 @@ let first = null, lock=false, matched=0, errors=0, seconds=0, timer;
 function startTimer(){
     timer = setInterval(()=>{
         seconds++;
-        let m = String(Math.floor(seconds/60)).padStart(2,""0"");
-        let s = String(seconds%60).padStart(2,""0"");
+        let m = String(Math.floor(seconds/60)).padStart(2,"0");
+        let s = String(seconds%60).padStart(2,"0");
         timerDisplay.textContent = `${m}:${s}`;
     },1000);
 }
@@ -312,11 +312,11 @@ function startTimer(){
 /* 创建烟花 */
 function boom() {
     for(let i=0;i<40;i++){
-        let s = document.createElement(""span"");
-        s.style.left = ""50%"";
-        s.style.top = ""50%"";
-        s.style.setProperty(""--x"", `${(Math.random()*200-100)}px`);
-        s.style.setProperty(""--y"", `${(Math.random()*200-100)}px`);
+        let s = document.createElement("span");
+        s.style.left = "50%";
+        s.style.top = "50%";
+        s.style.setProperty("--x", `${(Math.random()*200-100)}px`);
+        s.style.setProperty("--y", `${(Math.random()*200-100)}px`);
         fireworks.appendChild(s);
         setTimeout(()=> s.remove(), 1000);
     }
@@ -325,20 +325,20 @@ function boom() {
 /* 构建游戏牌面 */
 function buildGame(){
     matched=0; errors=0; seconds=0; first=null; lock=false;
-    errorDisplay.textContent=0; timerDisplay.textContent=""00:00"";
+    errorDisplay.textContent=0; timerDisplay.textContent="00:00";
     clearInterval(timer);
 
     let cards=[];
     vocab.forEach((v,i)=>{
-        cards.push({id:i, text:v.fr, type:""fr""});
-        cards.push({id:i, text:v.zh, type:""zh""});
+        cards.push({id:i, text:v.fr, type:"fr"});
+        cards.push({id:i, text:v.zh, type:"zh"});
     });
 
     cards.sort(()=>Math.random()-0.5);
-    gameBoard.innerHTML="""";
+    gameBoard.innerHTML="";
 
     cards.forEach(c=>{
-        let div=document.createElement(""div"");
+        let div=document.createElement("div");
         div.className = `card ${c.type}`;
         div.textContent = c.text;
         div.dataset.id = c.id;
@@ -352,17 +352,17 @@ function buildGame(){
 
 /* 选择卡片 */
 function selectCard(card,type){
-    if (lock || card.classList.contains(""matched"") || card.classList.contains(""selected"")) return;
+    if (lock || card.classList.contains("matched") || card.classList.contains("selected")) return;
 
-    card.classList.add(""selected"");
+    card.classList.add("selected");
 
-    if (type===""fr"") speakFR(card.textContent);
+    if (type==="fr") speakFR(card.textContent);
 
     if (!first) { first = card; return; }
 
     if (first.dataset.id === card.dataset.id) {
-        first.classList.add(""matched"");
-        card.classList.add(""matched"");
+        first.classList.add("matched");
+        card.classList.add("matched");
         matched+=2;
         first=null;
 
@@ -373,8 +373,8 @@ function selectCard(card,type){
         errors++;
         errorDisplay.textContent = errors;
         setTimeout(()=>{
-            first.classList.remove(""selected"");
-            card.classList.remove(""selected"");
+            first.classList.remove("selected");
+            card.classList.remove("selected");
             first=null;
             lock=false;
         },600);
@@ -390,28 +390,28 @@ function finishGame(){
     resultTime.textContent = timerDisplay.textContent;
     resultErrors.textContent = errors;
 
-    resultOverlay.classList.remove(""hidden"");
+    resultOverlay.classList.remove("hidden");
 }
 
 /* 开始游戏 */
 startBtn.onclick = ()=>{
     let name = playerInput.value.trim();
-    if (!name) return alert(""请输入姓名"");
+    if (!name) return alert("请输入姓名");
 
     displayName.textContent = name;
-    startScreen.classList.add(""hidden"");
-    gameScreen.classList.remove(""hidden"");
+    startScreen.classList.add("hidden");
+    gameScreen.classList.remove("hidden");
     buildGame();
 };
 
 /* 再玩一次 */
 playAgainBtn.onclick = ()=>{
-    resultOverlay.classList.add(""hidden"");
-    fireworks.innerHTML = """";
+    resultOverlay.classList.add("hidden");
+    fireworks.innerHTML = "";
     buildGame();
 };
 
 </script>
 
 </body>
-</html>"
+</html>
