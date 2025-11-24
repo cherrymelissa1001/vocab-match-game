@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>📘 A2 法语词汇 → JSON 转换工具</title>
+
+<!-- SheetJS 解析 Excel 所需库 -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #eef5ff;
+  padding: 30px;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.1);
+}
+
+h1 {
+  text-align: center;
+  color: #2255aa;
+}
+
+button {
+  padding: 12px 20px;
+  background: #337bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background: #1f5be0;
+}
+
+textarea {
+  width: 100%;
+  height: 280px;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #bbb;
+  font-family: Consolas, monospace;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>📘 A2 法语词汇 → vocab.json 生成器</h1>
+<p>上传 Excel（A 列 fr，B 列 zh），自动生成 vocab.json：</p>
+
+<input type="file" id="fileInput" accept=".xlsx,.xls" />
+<button onclick="downloadJSON()">下载 vocab.json</button>
+
+<textarea id="output" placeholder="生成的 JSON 将显示在这里"></textarea>
+
+</div>
+
+<script>
+/* 处理 Excel 上传 */
+document.getElementById("fileInput").addEventListener("change", function(e){
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, {type:"array"});
+
+        // 取第一张表
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, {header:1});
+
+        let json = [];
+
+        // 从第2行起读取（第1行是标题）
+        for (let i = 1; i < rows.length; i++){
+            let fr = (rows[i][0] || "").toString().trim();
+            let zh = (rows[i][1] || "").toString().trim();
+
+            if (fr && zh) {
+                json.push({ fr, zh });
+            }
+        }
+
+        document.getElementById("output").value = JSON.stringify(json, null, 2);
+    };
+
+    reader.readAsArrayBuffer(file);
+});
+
+/* 下载 JSON 文件 */
+function downloadJSON(){
+    const text = document.getElementById("output").value;
+    if (!text.trim()) {
+        alert("没有可下载的 JSON，请先上传 Excel！");
+        return;
+    }
+
+    const blob = new Blob([text], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "vocab.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+</script>
+
+</body>
+</html>
