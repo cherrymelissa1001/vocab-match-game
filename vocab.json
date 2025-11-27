@@ -1,102 +1,82 @@
 [
   {
-    "fr": "servir à qn",
-    "zh": "对某人有用"
+    "fr": "appréhender",
+    "zh": "担心"
   },
   {
-    "fr": "serrer qn contre son cœur",
-    "zh": "将某人紧紧抱在怀里"
+    "fr": "se réjouir",
+    "zh": "高兴"
   },
   {
-    "fr": "avec calme",
-    "zh": "平静地；冷静地"
+    "fr": "redouter",
+    "zh": "害怕"
   },
   {
-    "fr": "irréversible",
-    "zh": "不可逆的；无法挽回的"
+    "fr": "surprenant",
+    "zh": "令人吃惊的"
   },
   {
-    "fr": "s’abriter",
-    "zh": "躲避；避难"
+    "fr": "douter",
+    "zh": "怀疑"
   },
   {
-    "fr": "optimiste",
-    "zh": "乐观的"
+    "fr": "approuver",
+    "zh": "赞同"
   },
   {
-    "fr": "pessimiste",
-    "zh": "悲观的"
+    "fr": "consentir",
+    "zh": "同意"
   },
   {
-    "fr": "en bons termes",
-    "zh": "关系融洽"
+    "fr": "ordonner",
+    "zh": "命令"
   },
   {
-    "fr": "malgré soi",
-    "zh": "不由自主地；违心地"
+    "fr": "mécontent",
+    "zh": "不满的"
   },
   {
-    "fr": "avec sérénité",
-    "zh": "平静从容地；安详地"
+    "fr": "il se peut que",
+    "zh": "有可能……"
   },
   {
-    "fr": "réservé",
-    "zh": "内向的；矜持的"
+    "fr": "nier",
+    "zh": "否认"
   },
   {
-    "fr": "bavard",
-    "zh": "爱说话的；唠叨的"
+    "fr": "ignorer",
+    "zh": "不知道"
   },
   {
-    "fr": "arrogant",
-    "zh": "傲慢的；自大的"
+    "fr": "il semble que",
+    "zh": "似乎……"
   },
   {
-    "fr": "temporaire",
-    "zh": "临时的；暂时的"
+    "fr": "il me semble que",
+    "zh": "我觉得……"
   },
   {
-    "fr": "hésitant",
-    "zh": "犹豫的"
+    "fr": "de façon que",
+    "zh": "以便，使得"
   },
   {
-    "fr": "facultatif",
-    "zh": "可选择的；非强制性的"
+    "fr": "pourvu que",
+    "zh": "只要……"
   },
   {
-    "fr": "tendre",
-    "zh": "嫩的；柔软的；温柔的"
+    "fr": "en attendant que",
+    "zh": "在……之前"
   },
   {
-    "fr": "se décourager",
-    "zh": "灰心；泄气"
+    "fr": "convenbale",
+    "zh": "合适的"
   },
   {
-    "fr": "s’exposer",
-    "zh": "暴露自己；冒险"
+    "fr": "à moins que",
+    "zh": "除非……"
   },
   {
-    "fr": "positif",
-    "zh": "积极的；正面的"
-  },
-  {
-    "fr": "rater le projet",
-    "zh": "项目失败；把项目搞砸"
-  },
-  {
-    "fr": "mener qch à bien",
-    "zh": "把某事顺利完成"
-  },
-  {
-    "fr": "en harmonie",
-    "zh": "和睦地；和谐地"
-  },
-  {
-    "fr": "en accord",
-    "zh": "一致；协调"
-  },
-  {
-    "fr": "en paix",
-    "zh": "和平相处；安宁地"
+    "fr": "au moins",
+    "zh": "至少"
   }
 ]
